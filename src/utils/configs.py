@@ -9,7 +9,7 @@ pliblog's config settings, used to set pliblog's global config
 DEFAULT_CONFIG_PATH = "config.json"
 DEFAULT_CONFIG = {
     "file_level": "DEBUG",
-    "file_name": "pliblog.log",
+    "file_name": "latest.log",
     "file_path": "./logs",
     "file_format": "{asctime} {levelname} | {prefix}{message}",
     "file_encoding": "utf-8",

@@ -1,6 +1,6 @@
 {
     "file_level": "DEBUG",
-    "file_name": "pliblog.log",
+    "file_name": "latest.log",
     "file_path": "./logs",
     "file_format": "{asctime} {levelname} | {prefix}{message}",
     "file_encoding": "utf-8",
