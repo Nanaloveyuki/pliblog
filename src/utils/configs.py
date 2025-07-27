@@ -6,23 +6,23 @@ pliblog's config settings, used to set pliblog's global config
 # encoding = utf-8
 # python 3.13.5
 
-# Default Config Path
 DEFAULT_CONFIG_PATH = "config.json"
 DEFAULT_CONFIG = {
     "file_level": "DEBUG",
     "file_name": "pliblog.log",
     "file_path": "./logs",
-    "file_format": "{asctime} | {levelname} | {prefix} {message}",
+    "file_format": "{asctime} {levelname} | {prefix}{message}",
     "file_encoding": "utf-8",
     "enable_console": True,
     "enable_file": True,
     "console_color": True,
     "console_level": "INFO",
-    "console_format": "{asctime} | {levelname} | {prefix} {message}",
+    "console_format": "{asctime} {levelname} | {prefix}{message}",
     "console_prefix": "Auto",
     "console_encoding": "utf-8",
     "date_format": "%Y-%m-%d %H:%M:%S",
-    "level_name": {"DEBUG": "DEBUG", "INFO": "INFO", "WARN": "WARN", "ERRO": "ERRO", "CRIT": "CRIT"}
+    "level_name": {"DEBUG": "DEBUG", "INFO": "INFO", "WARN": "WARN", "ERRO": "ERRO", "CRIT": "CRIT"},
+    "level_color": {"DEBUG": "#c1d5ff", "INFO": "#c1ffff", "WARN": "#fff600", "ERRO": "#ffa000", "CRIT": "#ff8181"},
 }
 
 from typing import Union, Optional
@@ -119,9 +119,10 @@ def reset_config() -> tuple[bool, Optional[str]]:
                 json.dump(DEFAULT_CONFIG, f, indent=4)
             return True, "配置文件不存在，已创建默认配置"
 
-        from datetime import datetime
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        backup_path = f"{DEFAULT_CONFIG_PATH}.backup.{timestamp}"
+        from .time import get_asctime
+        timestamp = get_asctime()
+        backup_path = f"{DEFAULT_CONFIG_PATH}_{timestamp}.backup.json"
+        backup_path = backup_path.replace(":", "-")
         shutil.copy2(DEFAULT_CONFIG_PATH, backup_path)
         with open(DEFAULT_CONFIG_PATH, "w", encoding="utf-8") as f:
             json.dump(DEFAULT_CONFIG, f, indent=4)
