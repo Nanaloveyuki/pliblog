@@ -79,7 +79,7 @@ def fmt_placeholder(message: Any, use_date_color: bool = True) -> str:
         ))
     return message
 
-def fmt_message(message: Any, no_placeholder: bool = False) -> str:
+def fmt_message(message: Any, no_placeholder: bool = False, no_color: bool = False) -> str:
     """
     格式化消息内容
     Format message content
@@ -128,10 +128,14 @@ def fmt_message(message: Any, no_placeholder: bool = False) -> str:
             current_content = []
         
         return ''.join(result)
-    if no_placeholder:
-        return process_color_tags(str(message))
+    if no_color:
+        processed_message = str(message)
     else:
-        return process_color_tags(fmt_placeholder(str(message)))
+        processed_message = process_color_tags(str(message))
+    if no_placeholder:
+        return processed_message
+    else:
+        return process_color_tags(fmt_placeholder(processed_message)) if not no_color else fmt_placeholder(processed_message)
 
 def fmt_level_name(level_name: str) -> str:
     if get_config("console_color") != True:
@@ -166,7 +170,7 @@ def fmt_console(level: int, message: Any, prefix: str | None = None) -> Optional
     fmt = fmt_placeholder(fmt)
     return fmt.format(
         levelname = fmt_level_name(fmt_level_number(level)),
-        prefix = prefix,
+        prefix = fmt_message(prefix, no_placeholder=True),
         message = fmt_message(message, no_placeholder=True)
     )
 
@@ -184,9 +188,9 @@ def fmt_file(level: int, message: Any, prefix: str | None = None) -> Optional[st
         return None
     if prefix is None:
         prefix = ""
-    fmt = fmt_placeholder(fmt)
-    return fmt.format(
-        levelname = fmt_level_name(fmt_level_number(level)),
-        prefix = prefix,
-        message = fmt_message(message, no_placeholder=True)
-    )
+    fmt = fmt_placeholder(fmt, use_date_color=False)
+    return f"{fmt.format(
+        levelname = fmt_level_number(level),
+        prefix = fmt_message(prefix, no_placeholder=True, no_color=True),
+        message = fmt_message(message, no_placeholder=True, no_color=True)
+    )}\n"

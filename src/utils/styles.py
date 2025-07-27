@@ -6,7 +6,6 @@ pliblog's style tools, used to format log output
 # encoding = utf-8
 # python 3.13.5
 
-from .configs import get_config
 from typing import Union, Optional
 
 def _get_hex_to_ansi(hex_color: str) -> Union[Optional[str], None]:
