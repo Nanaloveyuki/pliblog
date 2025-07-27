@@ -72,13 +72,13 @@ class Logger:
         return fmt_console(level, fmt_message(message, no_placeholder=True), prefix)
 
     @staticmethod
-    def warn(message: Any, prefix: str | None = None, level: int = 30) -> Optional[str]:
+    def warn(message: Any, prefix: str | None = None, level: int = 31) -> Optional[str]:
         """
         警告日志
         Warn log
         :param message: 消息内容 Message content
         :param prefix: 前缀 Prefix
-        :param level: 日志级别 Log level(30~40)
+        :param level: 日志级别 Log level(31~40)
         """
         if level < 30 or level > 40:
             return None
@@ -90,13 +90,13 @@ class Logger:
         return fmt_console(level, fmt_message(message, no_placeholder=True), prefix)
 
     @staticmethod
-    def error(message: Any, prefix: str | None = None, level: int = 40) -> Optional[str]:
+    def error(message: Any, prefix: str | None = None, level: int = 41) -> Optional[str]:
         """
         错误日志
         Error log
         :param message: 消息内容 Message content
         :param prefix: 前缀 Prefix
-        :param level: 日志级别 Log level(40~50)
+        :param level: 日志级别 Log level(41~50)
         """
         if level < 40 or level > 50:
             return None
@@ -108,13 +108,13 @@ class Logger:
         return fmt_console(level, fmt_message(message, no_placeholder=True), prefix)
     
     @staticmethod
-    def critical(message: Any, prefix: str | None = None, level: int = 50) -> Optional[str]:
+    def critical(message: Any, prefix: str | None = None, level: int = 51) -> Optional[str]:
         """
         严重错误日志
         Critical error log
         :param message: 消息内容 Message content
         :param prefix: 前缀 Prefix
-        :param level: 日志级别 Log level(50~60)
+        :param level: 日志级别 Log level(51~60)
         """
         if level < 50 or level > 60:
             return None
