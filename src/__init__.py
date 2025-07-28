@@ -20,6 +20,7 @@ __all__ = [
     "fmt_placeholder",
     "fmt_message",
     "fmt_level_name",
+    "set_style",
     "set_color",
     "set_bg_color",
     "Logger" # 日志记录器非实例化

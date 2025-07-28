@@ -47,3 +47,22 @@ def set_bg_color(text: str, color: str) -> str:
     # 将前景色ANSI代码转换为背景色代码 (38→48)
     ansi = ansi.replace("38;", "48;")
     return f"{ansi}{text}\033[0m"
+
+def set_style(text: str, bold: bool = False, underline: bool = False, reverse: bool = False) -> str:
+    """
+    设置文本样式
+    Set text style
+    :param text: 文本内容 Text content
+    :param bold: 是否加粗 Is bold
+    :param underline: 是否下划线 Is underline
+    :param reverse: 是否反相 Is reverse
+    :return: 格式化后的文本 Formatted text
+    """
+    ansi = ""
+    if bold:
+        ansi += "\033[1m"
+    if underline:
+        ansi += "\033[4m"
+    if reverse:
+        ansi += "\033[7m"
+    return f"{ansi}{text}\033[0m"
