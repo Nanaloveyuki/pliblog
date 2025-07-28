@@ -28,6 +28,9 @@ DEFAULT_CONFIG = {
     "console_prefix": "Auto",
     "console_encoding": "utf-8",
     "asctime_format": "%Y-%m-%d %H:%M:%S",
+    "time_format": "%H:%M:%S",
+    "date_format": "%Y-%m-%d",
+    "weekday_format": "%A",
     "level_name": {"DEBUG": "DEBUG", "INFO": "INFO", "WARN": "WARN", "ERRO": "ERRO", "CRIT": "CRIT"},
     "level_color": {"DEBUG": "#c1d5ff", "INFO": "#c1ffff", "WARN": "#fff600", "ERRO": "#ffa000", "CRIT": "#ff8181"},
 }
