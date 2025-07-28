@@ -4,7 +4,7 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.append(str(project_root))
 
-from src.logiliteal.utils.configs import get_config, set_config, reset_config
+from src.logiliteal.utils.configs import get_config, set_config, reset_config, create_backup
 
 print(f"\n配置更换测试")
 set_config("file_level", "DEBUG")

@@ -12,6 +12,8 @@ from .time import get_asctime, get_time, get_weekday, get_date
 from .styles import set_color, set_bg_color
 import re
 
+time_color = get_config("time_color")
+
 def fmt_level(level: str) -> int:
     """
     格式化日志级别
@@ -64,10 +66,10 @@ def fmt_placeholder(message: Any, use_date_color: bool = True) -> str:
         message = str(message)
     if use_date_color:
         message = message.format_map(SafeDict(
-            asctime = set_color(get_asctime(),"#28ffb6"),
-            time = set_color(get_time(),"#28ffb6"),
-            weekday = set_color(get_weekday(),"#28ffb6"),
-            date = set_color(get_date(),"#28ffb6")
+            asctime = set_color(get_asctime(),time_color),
+            time = set_color(get_time(),time_color),
+            weekday = set_color(get_weekday(),time_color),
+            date = set_color(get_date(),time_color)
         ))
     else:
         message = message.format_map(SafeDict(

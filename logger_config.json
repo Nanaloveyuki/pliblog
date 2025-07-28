@@ -28,5 +28,6 @@
         "WARN": "#fff600",
         "ERRO": "#ffa000",
         "CRIT": "#ff8181"
-    }
+    },
+    "time_color": "#28ffb6"
 }

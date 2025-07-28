@@ -33,6 +33,7 @@ DEFAULT_CONFIG = {
     "weekday_format": "%A",
     "level_name": {"DEBUG": "DEBUG", "INFO": "INFO", "WARN": "WARN", "ERRO": "ERRO", "CRIT": "CRIT"},
     "level_color": {"DEBUG": "#c1d5ff", "INFO": "#c1ffff", "WARN": "#fff600", "ERRO": "#ffa000", "CRIT": "#ff8181"},
+    "time_color": "#28ffb6",
 }
 
 g_config_cache = None
