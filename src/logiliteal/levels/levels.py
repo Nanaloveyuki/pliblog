@@ -40,7 +40,9 @@ class Logger:
             with open(_get_full_path(file_path, file_name), "a", encoding=file_encoding) as f:
                 f.write(fmt_file(lvn, fmt_message(msg, no_placeholder=True), pf))
         if is_enable_console:
-            print(fmt_console(lvn, fmt_message(msg, no_placeholder=True), pf))
+            console_output = fmt_console(lvn, fmt_message(msg, no_placeholder=True), pf)
+            if console_output is not None:
+                print(console_output)
         return fmt_console(lvn, fmt_message(msg, no_placeholder=True), pf)
 
     def debug(self, message: Any, prefix: str | None = None, level: int = 0) -> Optional[str]:
