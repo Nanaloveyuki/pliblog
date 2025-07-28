@@ -1,6 +1,6 @@
 """
-pliblog的样式工具,用于格式化日志输出
-pliblog's style tools, used to format log output
+py-logiliteal的样式工具,用于格式化日志输出
+py-logiliteal's style tools, used to format log output
 
 """
 # encoding = utf-8

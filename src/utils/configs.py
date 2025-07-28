@@ -1,6 +1,6 @@
 """
-pliblog的配置设置,用于设置pliblog的全局配置
-pliblog's config settings, used to set pliblog's global config
+py-logiliteal的配置设置,用于设置py-logiliteal的全局配置
+py-logiliteal's config settings, used to set py-logiliteal's global config
 
 """
 # encoding = utf-8
@@ -26,7 +26,7 @@ DEFAULT_CONFIG = {
 }
 
 from typing import Union, Optional
-import logging
+from logging import error, info
 import json
 
 def get_config(select: str = None) -> Union[dict, str, bool, int, None]:
@@ -48,10 +48,10 @@ def get_config(select: str = None) -> Union[dict, str, bool, int, None]:
             return DEFAULT_CONFIG[select]
         return DEFAULT_CONFIG
     except KeyError as e:
-        logging.error(f"配置项 '{select}' 不存在")
+        error(f"配置项 '{select}' 不存在")
         return None
     except Exception as e:
-        logging.error(f"读取配置文件失败: {e}")
+        error(f"读取配置文件失败: {e}")
         return None
 
 import shutil
@@ -84,7 +84,7 @@ def set_config(select: str, value: Union[dict, str, bool, int, None]) -> tuple[b
         with open(DEFAULT_CONFIG_PATH, "r", encoding="utf-8") as f:
             verify_config = json.load(f)
             if verify_config.get(select) != value:
-                
+                error(f"配置项 '{select}' 设置失败，值为 {value}")
                 shutil.move(backup_path, DEFAULT_CONFIG_PATH)
                 return False, f"配置项 '{select}' 设置失败，已恢复备份"
         
@@ -92,13 +92,13 @@ def set_config(select: str, value: Union[dict, str, bool, int, None]) -> tuple[b
         return True, f"配置项 '{select}' 设置成功"
 
     except json.JSONDecodeError as e:
-        logging.error(f"配置文件格式错误: {e}")
+        error(f"配置文件格式错误: {e}")
         return False, f"配置文件格式错误: {str(e)}"
     except PermissionError:
-        logging.error(f"没有权限操作配置文件: {DEFAULT_CONFIG_PATH}")
+        error(f"没有权限操作配置文件: {DEFAULT_CONFIG_PATH}")
         return False, "没有权限操作配置文件"
     except Exception as e:
-        logging.error(f"设置配置文件失败: {e}")
+        error(f"设置配置文件失败: {e}")
 
         if Path(backup_path).exists():
             shutil.move(backup_path, DEFAULT_CONFIG_PATH)
@@ -128,11 +128,11 @@ def reset_config() -> tuple[bool, Optional[str]]:
             json.dump(DEFAULT_CONFIG, f, indent=4)
         return True
     except PermissionError:
-        logging.error(f"权限不足，无法操作配置文件: {DEFAULT_CONFIG_PATH}")
+        error(f"权限不足，无法操作配置文件: {DEFAULT_CONFIG_PATH}")
         return False, "权限不足，无法重置配置"
     except json.JSONDecodeError:
-        logging.error("配置文件格式错误，无法解析")
+        error("配置文件格式错误，无法解析")
         return False, "配置文件格式错误，无法重置"
     except Exception as e:
-        logging.error(f"重置配置文件失败: {e}")
+        error(f"重置配置文件失败: {e}")
         return False, f"重置配置失败: {str(e)}"
