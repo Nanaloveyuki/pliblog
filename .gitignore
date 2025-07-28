@@ -1,5 +1,7 @@
 # Custom
 *_backup.json
+auto_upload.bat
+auto_upload.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
