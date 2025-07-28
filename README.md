@@ -8,7 +8,7 @@
 py-logiliteal 允许嵌入到其他项目中, 并根据需要自定义日志记录器
 同时也支持pip安装
 ```bash
-pip install py-logiliteal
+pip install logiliteal
 ```
 
 **支持高可扩展的样式**
@@ -28,7 +28,7 @@ pip install py-logiliteal
 ## 安装
 暂无安装包, 请使用release发布版或直接clone代码到本地/使用pip安装
 ```bash
-pip install py-logiliteal
+pip install logiliteal
 ```
 
 ## 文档
@@ -37,8 +37,8 @@ pip install py-logiliteal
 ## 示例
 ```python
 # 导入
-from py_logiliteal import Logger
-# 或 import py_logiliteal(不推荐)
+from logiliteal import Logger
+# 或 import logiliteal(不推荐)
 
 # 实例化
 logger = Logger()
@@ -51,7 +51,7 @@ logger.warn("这是一条带有前缀的警告日志", prefix="114514")
 logger.critical("这是一条带有前缀并且日志等级不同的严重错误日志", prefix="114514", level=55)
 
 # 自定义配置
-from py_logiliteal import set_config, get_config
+from logiliteal import set_config, get_config
 # 读取配置
 print(get_config("console_format"))
 # 默认会输出时间、日志等级、日志前缀、日志消息
