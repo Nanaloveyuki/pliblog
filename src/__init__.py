@@ -5,7 +5,7 @@ py-logiliteal's config settings, used to set py-logiliteal's global config
 # encoding = utf-8
 # python 3.13.5
 
-from .utils import get_config, set_config, reset_config, get_asctime, get_date, get_time, get_weekday, fmt_console, fmt_placeholder, fmt_message, fmt_level_name, get_style, set_style, reset_style
+from .utils import get_config, set_config, reset_config, get_asctime, get_date, get_time, get_weekday, fmt_console, fmt_placeholder, fmt_message, fmt_level_name, set_style
 from .levels import Logger
 
 __all__ = [
