@@ -8,6 +8,4 @@ Log level module
 
 from .levels import Logger
 
-__all__ = [
-    "Logger"
-]
+__all__ = ["Logger"]
