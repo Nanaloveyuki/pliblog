@@ -34,95 +34,71 @@ class Logger:
             from os import rename
             rename(_get_full_path(file_path, file_name), _get_full_path(file_path, f"{get_asctime().replace(':', '-')}.log"))
             self.debug("日志文件已存在，已自动重命名")
-
-    @staticmethod
-    def info(message: Any, prefix: str | None = None, level: int = 20) -> Optional[str]:
-        """
-        信息日志
-        Info log
-        :param message: 消息内容 Message content
-        :param prefix: 前缀 Prefix
-        :param level: 日志级别 Log level(11~20)
-        """
-        if level < 11 or level > 20:
-            return None
+    
+    def _log(self, msg, pf, lvn):
         if is_enable_file:
             with open(_get_full_path(file_path, file_name), "a", encoding=file_encoding) as f:
-                f.write(fmt_file(level, fmt_message(message, no_placeholder=True), prefix))
+                f.write(fmt_file(lvn, fmt_message(msg, no_placeholder=True), pf))
         if is_enable_console:
-            print(fmt_console(level, fmt_message(message, no_placeholder=True), prefix))
-        return fmt_console(level, fmt_message(message, no_placeholder=True), prefix)
+            print(fmt_console(lvn, fmt_message(msg, no_placeholder=True), pf))
+        return fmt_console(lvn, fmt_message(msg, no_placeholder=True), pf)
 
-    @staticmethod
-    def debug(message: Any, prefix: str | None = None, level: int = 10) -> Optional[str]:
+    def debug(self, message: Any, prefix: str | None = None, level: int = 0) -> Optional[str]:
         """
         调试日志
         Debug log
         :param message: 消息内容 Message content
         :param prefix: 前缀 Prefix
-        :param level: 日志级别 Log level(0~10)
+        :param level: 日志级别 Log level(0~9)
         """
-        if level < 0 or level > 10:
-            return None
-        if is_enable_file:
-            with open(_get_full_path(file_path, file_name), "a", encoding=file_encoding) as f:
-                f.write(fmt_file(level, fmt_message(message, no_placeholder=True), prefix))
-        if is_enable_console:
-            print(fmt_console(level, fmt_message(message, no_placeholder=True), prefix))
-        return fmt_console(level, fmt_message(message, no_placeholder=True), prefix)
+        return self._log(message, prefix, level)
 
-    @staticmethod
-    def warn(message: Any, prefix: str | None = None, level: int = 31) -> Optional[str]:
+    def info(self, message: Any, prefix: str | None = None, level: int = 10) -> Optional[str]:
+        """
+        信息日志
+        Info log
+        :param message: 消息内容 Message content
+        :param prefix: 前缀 Prefix
+        :param level: 日志级别 Log level(10~19)
+        """
+        return self._log(message, prefix, level)
+
+    def warn(self, message: Any, prefix: str | None = None, level: int = 20) -> Optional[str]:
         """
         警告日志
         Warn log
         :param message: 消息内容 Message content
         :param prefix: 前缀 Prefix
-        :param level: 日志级别 Log level(31~40)
+        :param level: 日志级别 Log level(20~29)
         """
-        if level < 30 or level > 40:
-            return None
-        if is_enable_file:
-            with open(_get_full_path(file_path, file_name), "a", encoding=file_encoding) as f:
-                f.write(fmt_file(level, fmt_message(message, no_placeholder=True), prefix))
-        if is_enable_console:
-            print(fmt_console(level, fmt_message(message, no_placeholder=True), prefix))
-        return fmt_console(level, fmt_message(message, no_placeholder=True), prefix)
+        return self._log(message, prefix, level)
 
-    @staticmethod
-    def error(message: Any, prefix: str | None = None, level: int = 41) -> Optional[str]:
+    def error(self, message: Any, prefix: str | None = None, level: int = 30) -> Optional[str]:
         """
         错误日志
         Error log
         :param message: 消息内容 Message content
         :param prefix: 前缀 Prefix
-        :param level: 日志级别 Log level(41~50)
+        :param level: 日志级别 Log level(30~39)
         """
-        if level < 40 or level > 50:
-            return None
-        if is_enable_file:
-            with open(_get_full_path(file_path, file_name), "a", encoding=file_encoding) as f:
-                f.write(fmt_file(level, fmt_message(message, no_placeholder=True), prefix))
-        if is_enable_console:
-            print(fmt_console(level, fmt_message(message, no_placeholder=True), prefix))
-        return fmt_console(level, fmt_message(message, no_placeholder=True), prefix)
-    
-    @staticmethod
-    def critical(message: Any, prefix: str | None = None, level: int = 51) -> Optional[str]:
+        return self._log(message, prefix, level)
+
+    def critical(self, message: Any, prefix: str | None = None, level: int = 40) -> Optional[str]:
         """
         严重错误日志
         Critical error log
         :param message: 消息内容 Message content
         :param prefix: 前缀 Prefix
-        :param level: 日志级别 Log level(51~60)
+        :param level: 日志级别 Log level(40~49)
         """
-        if level < 50 or level > 60:
-            return None
-        if is_enable_file:
-            with open(_get_full_path(file_path, file_name), "a", encoding=file_encoding) as f:
-                f.write(fmt_file(level, fmt_message(message, no_placeholder=True), prefix))
-        if is_enable_console:
-            print(fmt_console(level, fmt_message(message, no_placeholder=True), prefix))
-        return fmt_console(level, fmt_message(message, no_placeholder=True), prefix)
+        return self._log(message, prefix, level)
 
-
+    def log(self, message: Any, prefix: str | None = None, level: int = 50) -> Optional[str]:
+        """
+        自定义日志
+        Custom log
+        :param message: 消息内容 Message content
+        :param prefix: 前缀 Prefix
+        :param level: 日志级别 Log level(50~59...)
+        """
+        return self._log(message, prefix, level)
