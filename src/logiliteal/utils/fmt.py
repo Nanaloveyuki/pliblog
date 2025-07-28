@@ -7,7 +7,7 @@ py-logiliteal's formatter, used to format log output
 # python 3.13.5
 
 from .configs import get_config
-from typing import Any, Optional, Union
+from typing import Any, Optional
 from .time import get_asctime, get_time, get_weekday, get_date
 from .styles import set_color, set_bg_color
 import re
@@ -20,15 +20,14 @@ def fmt_level(level: str) -> int:
     :return: 格式化后的日志级别 Formatted log level
     """
     level_map = {
-        "DEBUG": 10,
-        "INFO": 20,
-        "WARN": 30,
-        "ERRO": 40,
-        "CRIT": 50,
+        "DEBUG": 0,
+        "INFO": 10,
+        "WARN": 20,
+        "ERRO": 30,
+        "CRIT": 40,
+        "UNKN": 50
     }
-    if level == "UNKN":
-        return -1
-    return level_map.get(level.upper(), 0)
+    return level_map.get(level.upper(), 50)
 
 def fmt_level_number(level: int) -> str:
     """
@@ -37,15 +36,15 @@ def fmt_level_number(level: int) -> str:
     :param level: 日志级别数字 Log level number
     :return: 格式化后的日志级别 Formatted log level
     """
-    if level <= 10 and level >= 0:
+    if level < 10:
         return "DEBUG"
-    elif level <= 20 and level > 10:
+    elif level < 20:
         return "INFO"
-    elif level <= 30 and level > 20:
+    elif level < 30:
         return "WARN"
-    elif level <= 40 and level > 30:
+    elif level < 40:
         return "ERRO"
-    elif level <= 50 and level > 40:
+    elif level < 50:
         return "CRIT"
     else:
         return "UNKN"
@@ -88,46 +87,34 @@ def fmt_message(message: Any, no_placeholder: bool = False, no_color: bool = Fal
     """
 
     def process_color_tags(msg: str) -> str:
+        from io import StringIO
+        output = StringIO()
         stack = []
-        result = []
-        current_content = []
         last_end = 0
         pattern = re.compile(r'(<#([0-9a-fA-F]{6})>|</>)')
-        
+        current_color = None
+
         for match in pattern.finditer(msg):
-            text_between = msg[last_end:match.start()]
-            if stack:
-                current_content.append(text_between)
-            else: 
-                result.append(text_between)
-            
-            last_end = match.end()
+            output.write(msg[last_end:match.start()])
             tag = match.group(1)
-            
+            last_end = match.end()
+
             if tag.startswith('<#'):
-                color_code = match.group(2)
-                stack.append(color_code)
+                stack.append(current_color)
+                current_color = match.group(2)
             else:
                 if stack:
-                    color = stack.pop()
-                    colored_content = set_color(''.join(current_content), f'#{color}')
-                    result.append(colored_content)
-                    current_content = []
+                    current_color = stack.pop()
                 else:
-                    result.append(tag)
+                    output.write(tag)
 
-        remaining_text = msg[last_end:]
-        if stack:
-            current_content.append(remaining_text)
-        else:
-            result.append(remaining_text)
-        
-        for color in reversed(stack):
-            result.append(f'<#{color}>')
-            result.append(''.join(current_content))
-            current_content = []
-        
-        return ''.join(result)
+        output.write(msg[last_end:])
+        result = output.getvalue()
+        output.close()
+
+        if current_color:
+            result += ''.join(f'<#{color}>' for color in reversed(stack)) if stack else f'<#{current_color}>'
+        return result
     if no_color:
         processed_message = str(message)
     else:
@@ -161,14 +148,12 @@ def fmt_console(level: int, message: Any, prefix: str | None = None) -> Optional
     :param message: 消息内容 Message content
     :return: 格式化后的消息 Formatted message
     """
-    cl = get_config("console_level")
-    fmt = get_config("console_format")
-    if fmt_level(cl) > level:
+    console_level = get_config("console_level")
+    if level != -1 and fmt_level(console_level) > level:
         return None
-    if prefix is None:
-        prefix = ""
-    fmt = fmt_placeholder(fmt)
-    return fmt.format(
+    fmt = get_config("console_format")
+    prefix = prefix or ""
+    return fmt_placeholder(fmt).format(
         levelname = fmt_level_name(fmt_level_number(level)),
         prefix = fmt_message(prefix, no_placeholder=True),
         message = fmt_message(message, no_placeholder=True)

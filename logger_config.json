@@ -7,11 +7,11 @@
     "enable_console": true,
     "enable_file": true,
     "console_color": true,
-    "console_level": "INFO",
+    "console_level": "DEBUG",
     "console_format": "{time} {levelname} | {prefix}{message}",
     "console_prefix": "Auto",
     "console_encoding": "utf-8",
-    "date_format": "%Y-%m-%d %H:%M:%S",
+    "asctime_format": "%Y-%m-%d %H:%M:%S",
     "level_name": {
         "DEBUG": "DEBUG",
         "INFO": "INFO",

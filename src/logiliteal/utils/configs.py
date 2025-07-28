@@ -9,7 +9,6 @@ py-logiliteal's config settings, used to set py-logiliteal's global config
 import json
 from os import remove
 import shutil
-import time
 from pathlib import Path
 from typing import Union, Optional, Tuple
 from logging import error
@@ -28,7 +27,7 @@ DEFAULT_CONFIG = {
     "console_format": "{time} {levelname} | {prefix}{message}",
     "console_prefix": "Auto",
     "console_encoding": "utf-8",
-    "date_format": "%Y-%m-%d %H:%M:%S",
+    "asctime_format": "%Y-%m-%d %H:%M:%S",
     "level_name": {"DEBUG": "DEBUG", "INFO": "INFO", "WARN": "WARN", "ERRO": "ERRO", "CRIT": "CRIT"},
     "level_color": {"DEBUG": "#c1d5ff", "INFO": "#c1ffff", "WARN": "#fff600", "ERRO": "#ffa000", "CRIT": "#ff8181"},
 }

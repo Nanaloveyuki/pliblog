@@ -23,7 +23,7 @@ def get_asctime() -> str:
     global cache_asctime
     if cache_asctime:
         return cache_asctime
-    cache_asctime = datetime.now().strftime(get_config("date_format"))
+    cache_asctime = datetime.now().strftime(get_config("asctime_format"))
     return cache_asctime
 
 def get_time() -> str:
