@@ -4,7 +4,7 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.append(str(project_root))
 
-from src.utils.fmt import fmt_level, fmt_level_number, fmt_console, fmt_message, fmt_placeholder
+from src.logiliteal.utils.fmt import fmt_level, fmt_level_number, fmt_console, fmt_message, fmt_placeholder
 
 print("日志级别测试")
 print(fmt_level("DEBUG"))

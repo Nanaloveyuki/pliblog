@@ -17,7 +17,7 @@ DEFAULT_CONFIG = {
     "enable_file": True,
     "console_color": True,
     "console_level": "INFO",
-    "console_format": "{asctime} {levelname} | {prefix}{message}",
+    "console_format": "{time} {levelname} | {prefix}{message}",
     "console_prefix": "Auto",
     "console_encoding": "utf-8",
     "date_format": "%Y-%m-%d %H:%M:%S",
