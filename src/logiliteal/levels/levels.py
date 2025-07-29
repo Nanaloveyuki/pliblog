@@ -12,6 +12,8 @@ from ..utils.configs import get_config, set_config
 from ..utils.time import get_asctime
 import pathlib
 from pathlib import Path
+import sys
+import os
 
 def _get_full_path(file_path, file_name):
     file_path.mkdir(parents=True, exist_ok=True)
@@ -19,7 +21,18 @@ def _get_full_path(file_path, file_name):
 
 class Logger:
     def __init__(self):
-        project_root = Path(__file__).parent.parent.parent.parent
+        # 检测虚拟环境并确定项目根目录
+        python_path = sys.executable
+        project_root = Path.cwd()
+        
+        # 如果在虚拟环境中，向上查找项目根目录
+        if 'venv' in python_path.lower():
+            # 分割路径并查找venv目录
+            path_parts = os.path.normpath(python_path).split(os.sep)
+            if 'venv' in path_parts:
+                venv_index = path_parts.index('venv')
+                project_root = Path(os.sep.join(path_parts[:venv_index]))
+        
         file_path = project_root / get_config("file_path")
         file_path.mkdir(parents=True, exist_ok=True)
         if file_path.exists():
@@ -34,7 +47,18 @@ class Logger:
             self.debug("日志文件已存在，已自动重命名")
 
     def _log(self, msg, pf, lvn, no_file: bool = False, no_console: bool = False):
-        project_root = Path(__file__).parent.parent.parent.parent
+        # 检测虚拟环境并确定项目根目录
+        python_path = sys.executable
+        project_root = Path.cwd()
+        
+        # 如果在虚拟环境中，向上查找项目根目录
+        if 'venv' in python_path.lower():
+            # 分割路径并查找venv目录
+            path_parts = os.path.normpath(python_path).split(os.sep)
+            if 'venv' in path_parts:
+                venv_index = path_parts.index('venv')
+                project_root = Path(os.sep.join(path_parts[:venv_index]))
+        
         file_path = project_root / get_config("file_path")
         file_path.mkdir(parents=True, exist_ok=True)
         file_name = get_config("file_name")
