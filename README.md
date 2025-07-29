@@ -67,11 +67,12 @@ pip install logiliteal
 ## 示例
 ```python
 # 导入
-from logiliteal import Logger
+from logiliteal import logger, Logger
 # 或 import logiliteal(不推荐)
 
-# 实例化
-logger = Logger()
+# 实例化(不推荐: 会造成多实例问题)
+# 推荐直接使用 logger 而不是 Logger()
+# logger = Logger()
 
 #使用功能
 logger.info("这是一条信息日志")
