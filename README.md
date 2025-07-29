@@ -14,7 +14,37 @@ pip install logiliteal
 **支持高可扩展的样式**
 - 支持使用HEX十六进制颜色代码`<#ffffff>text</>`渲染颜色
 - 支持使用占位符`{placeholder}`渲染变量(可手动扩展)
+- 支持部分Html或Markdown语法(如`<b>text</b>`)
 - 支持自定义日志格式和日志颜色
+
+Html语法支持:
+- `<b>text</b>` 加粗
+- `<i>text</i>` 斜体
+- `<u>text</u>` 下划线
+- `<s>text</s>` 删除线
+- `<c>` 清除颜色
+- `<br>` 换行
+- `</>` Html万用闭合
+
+> **注意!Html嵌套可能会有问题, 不建议过多嵌套**
+
+Markdown语法支持:
+- `**text**` 加粗
+- `*text*` 斜体
+- `__text__` 下划线
+- `~~text~~` 删除线
+- `[text](url)` 链接
+
+> **注意!Html和Markdown语法虽然可以同时使用,但是不保证所有语法都能正常工作, 建议只使用其中一种**
+
+> **目前语法解析属于测试阶段,欢迎反馈或者提出Pr**
+- 目前支持的Html标签: `<b>`, `<i>`, `<u>`, `<s>`, `<c>`, `<br>`, `</>`
+- 目前支持的Markdown语法: `**`, `*`, `__`, `~~`, `[text](url)`
+- 目前支持的变量:
+    - `{asctime}` 对应日志完整时间(`config.asctime`)
+    - `{time}` 对应日志简略时间(`config.time`)
+    - `{weekday}` 对应日志星期(`config.weekday`)
+    - `{date}` 对应日志日期(`config.date`)
 
 **支持的Python版本**
 - Python 3.13.5
