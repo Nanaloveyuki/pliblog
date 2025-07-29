@@ -9,12 +9,6 @@ Time utility module, used for time formatting and output, caching time formattin
 from datetime import datetime
 from .configs import get_config
 
-import time
-
-cache_time: str = ""
-cache_time_ts: float = 0.0
-cache_fmt: str | None = None
-
 def get_asctime() -> str:
     """
     获取当前时间(YYYY-MM-DD HH:MM:SS),并缓存格式化结果
@@ -54,12 +48,5 @@ def _get_time(fmt: str) -> str:
     :param fmt: 时间格式 Time format
     :return: 格式化后的时间 Formatted time
     """
-    global cache_time, cache_time_ts, cache_fmt
-    if cache_fmt is None:
-        cache_fmt = fmt
-    now = time.time()
-    if cache_time and (now - cache_time_ts < 1) and (cache_fmt == fmt):
-        return cache_time
     cache_time = datetime.now().strftime(fmt)
-    cache_time_ts = now
     return cache_time
