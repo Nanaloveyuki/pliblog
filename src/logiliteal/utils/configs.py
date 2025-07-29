@@ -9,11 +9,43 @@ py-logiliteal's config settings, used to set py-logiliteal's global config
 import json
 from os import remove
 import shutil
+import os
 from pathlib import Path
 from typing import Union, Optional, Tuple
 from logging import error
 
-DEFAULT_CONFIG_PATH = "logger_config.json"
+def get_config_path():
+    # 检查环境变量
+    env_config = os.getenv('LOGILITEAL_CONFIG')
+    if env_config and os.path.exists(env_config):
+        return env_config
+
+    # 检查当前工作目录
+    cwd_config = os.path.join(os.getcwd(), 'logger_config.json')
+    if os.path.exists(cwd_config):
+        return cwd_config
+
+    # 检查XDG配置目录
+    xdg_config_dir = os.getenv('XDG_CONFIG_HOME', os.path.join(os.path.expanduser('~'), '.config'))
+    xdg_config_path = os.path.join(xdg_config_dir, 'logiliteal', 'logger_config.json')
+
+    # 创建目录（如果不存在）
+    if not os.path.exists(os.path.dirname(xdg_config_path)):
+        try:
+            os.makedirs(os.path.dirname(xdg_config_path), exist_ok=True)
+        except Exception as e:
+            error(f"创建配置目录失败: {e}")
+            # 回退到项目根目录的配置文件
+            project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+            fallback_config = os.path.join(project_root, 'logger_config.json')
+            if os.path.exists(fallback_config):
+                return fallback_config
+            else:
+                return xdg_config_path
+
+    return xdg_config_path
+
+DEFAULT_CONFIG_PATH = get_config_path()
 DEFAULT_CONFIG = {
     "file_level": "DEBUG",
     "file_name": "latest.log",
@@ -23,7 +55,7 @@ DEFAULT_CONFIG = {
     "enable_console": True,
     "enable_file": True,
     "console_color": True,
-    "console_level": "INFO",
+    "console_level": "DEBUG",
     "console_format": "{time} {levelname} | {prefix}{message}",
     "console_prefix": "Auto",
     "console_encoding": "utf-8",
@@ -94,6 +126,8 @@ def get_config(select: str = None) -> Union[dict, str, bool, int, None]:
                 g_config_cache = json.load(f)
                 g_config_mtime = current_mtime
     else:
+        # 确保目录存在
+        config_path.parent.mkdir(parents=True, exist_ok=True)
         with open(config_path, "w", encoding="utf-8") as f:
             json.dump(DEFAULT_CONFIG, f, indent=4)
         g_config_cache = DEFAULT_CONFIG
