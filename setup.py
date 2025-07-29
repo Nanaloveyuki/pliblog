@@ -6,7 +6,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="logiliteal",
-    version="0.1.3",
+    version="0.1.4",
     description="简洁,高扩展性,可自定义的日志库 / Simple, high extensibility, and customizable logging library",
     long_description=long_description,
     long_description_content_type="text/markdown",
