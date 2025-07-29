@@ -11,6 +11,8 @@ from .utils import fmt_console, fmt_placeholder, fmt_message, fmt_level_name
 from .utils import set_style, set_color, set_bg_color
 from .levels import Logger
 
+logger = Logger()
+
 __all__ = [
     "get_config",
     "set_config",
@@ -27,5 +29,6 @@ __all__ = [
     "set_color",
     "set_bg_color",
     "create_backup",
-    "Logger" # 日志记录器非实例化
+    "Logger", # 日志记录器非实例化
+    "logger" # 日志记录器实例化
 ]
