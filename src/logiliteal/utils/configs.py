@@ -46,26 +46,7 @@ def get_config_path():
     return xdg_config_path
 
 DEFAULT_CONFIG_PATH = get_config_path()
-DEFAULT_CONFIG = {
-    "file_level": "DEBUG",
-    "file_name": "latest.log",
-    "file_path": "./logs",
-    "file_format": "{asctime} {levelname} | {prefix}{message}{suffix}",
-    "file_encoding": "utf-8",
-    "enable_console": True,
-    "enable_file": True,
-    "console_color": True,
-    "console_level": "DEBUG",
-    "console_format": "{set_color(time, await get_config('time_color'))} {levelname} | {prefix}{message}{suffix}",
-    "console_encoding": "utf-8",
-    "asctime_format": "%Y-%m-%d %H:%M:%S",
-    "time_format": "%H:%M:%S",
-    "date_format": "%Y-%m-%d",
-    "weekday_format": "%A",
-    "level_nickname": {"DEBUG": "DEBUG", "INFO": "INFO", "WARN": "WARN", "ERRO": "ERRO", "CRIT": "CRIT"},
-    "level_color": {"DEBUG": "#c1d5ff", "INFO": "#c1ffff", "WARN": "#fff600", "ERRO": "#ffa000", "CRIT": "#ff8181"},
-    "time_color": "#28ffb6",
-}
+
 
 g_config_cache = None
 g_config_mtime = 0

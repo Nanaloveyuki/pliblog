@@ -7,29 +7,7 @@ from .time import get_asctime, get_time, get_weekday, get_date
 from .styles import set_color
 from .configs import get_config
 from .regex import process_color_formatting, process_html_styles, process_links, process_markdown_formats, process_special_tags
-
-# 占位符
-_placeholder: dict[str, str | bytes] = {
-    "asctime": "{get_asctime()}",
-    "time": "{get_time()}",
-    "weekday": "{get_weekday()}",
-    "date": "{get_date()}",
-    "levelname": "{await fmt_level_number_to_name(level_number)}",
-    "level_number": "{await fmt_level_name_to_number(levelname)}",
-    "message": "{message}",
-    "prefix": "{prefix}",
-    "suffix": "{suffix}",
-}
-
-# 日志级别映射
-_level_name_map: dict[str, int | float] = {
-    "DEBUG": 0,
-    "INFO": 10,
-    "WARN": 20,
-    "ERRO": 30,
-    "CRIT": 40,
-    "UNKN": -1,
-}
+from .env import _placeholder, _level_name_map
 
 async def fmt_level_number_to_name(level_number: int | float) -> str:
     """
