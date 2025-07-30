@@ -7,166 +7,107 @@ py-logiliteal's config settings, used to set py-logiliteal's global config
 # python 3.13.5
 
 import json
-from os import remove
-import shutil
-import os
-from pathlib import Path
-from typing import Union, Optional, Tuple
-from logging import error
-
-def get_config_path():
-    # 检查环境变量
-    env_config = os.getenv('LOGILITEAL_CONFIG')
-    if env_config and os.path.exists(env_config):
-        return env_config
-
-    # 检查当前工作目录
-    cwd_config = os.path.join(os.getcwd(), 'logger_config.json')
-    if os.path.exists(cwd_config):
-        return cwd_config
-
-    # 检查XDG配置目录
-    xdg_config_dir = os.getenv('XDG_CONFIG_HOME', os.path.join(os.path.expanduser('~'), '.config'))
-    xdg_config_path = os.path.join(xdg_config_dir, 'logiliteal', 'logger_config.json')
-
-    # 创建目录（如果不存在）
-    if not os.path.exists(os.path.dirname(xdg_config_path)):
-        try:
-            os.makedirs(os.path.dirname(xdg_config_path), exist_ok=True)
-        except Exception as e:
-            error(f"创建配置目录失败: {e}")
-            # 回退到项目根目录的配置文件
-            project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
-            fallback_config = os.path.join(project_root, 'logger_config.json')
-            if os.path.exists(fallback_config):
-                return fallback_config
-            else:
-                return xdg_config_path
-
-    return xdg_config_path
-
-DEFAULT_CONFIG_PATH = get_config_path()
-
-
-g_config_cache = None
-g_config_mtime = 0
-
-def create_backup(config_path: Path) -> Tuple[bool, str]:
+from .env import DEFAULT_CONFIG, get_config_path
+import pathlib
+from typing import Any
+def init_config(config: dict = DEFAULT_CONFIG, config_path: str = None) -> bool:
     """
-    创建配置文件备份
-    :param config_path: 配置文件路径
-    :param backup_prefix: 备份文件前缀
-    :return: (是否成功, 备份路径或错误信息)
+    初始化配置
+    Init config
+    Args:
+        config (dict, optional): 配置字典. Defaults to DEFAULT_CONFIG.
+        config_path (str, optional): 配置文件路径. Defaults to None.
+    Returns:
+        bool: 是否成功初始化配置
     """
-    try:
-        if not config_path.exists():
-            return False, f"配置文件不存在: {config_path}"
-        backup_path = config_path.parent / f"logger_config_backup.json"
+    if config_path is None:
+        config_path = str(get_config_path())
+    dump_config = json.dumps(config, indent=4)
+    with open(config_path, "w") as f:
+        f.write(dump_config)
+    return True
 
-        if backup_path.exists():
-            remove(backup_path)
-        shutil.copy2(config_path, backup_path)
-        return True, str(backup_path)
-    except PermissionError:
-        return False, f"权限不足，无法创建备份: {config_path}"
-    except Exception as e:
-        return False, f"备份失败: {str(e)}"
-
-def handle_config_exceptions(func):
+def get_config(key: str | None = None) -> Any:
     """
-    配置操作异常处理装饰器
+    获取配置
+    Get config
+    Args:
+        key (str | None, optional): 配置键. Defaults to None.
+    Returns:
+        Any: 配置值
     """
-    def wrapper(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except json.JSONDecodeError as e:
-            error(f"配置文件格式错误: {e}")
-            return False, f"配置文件格式错误: {str(e)}"
-        except PermissionError:
-            error(f"没有权限操作配置文件: {DEFAULT_CONFIG_PATH}")
-            return False, "没有权限操作配置文件"
-        except Exception as e:
-            error(f"配置操作失败: {e}")
-            return False, f"配置操作失败: {str(e)}"
-    return wrapper
-
-def get_config(select: str = None) -> Union[dict, str, bool, int, None]:
-    """
-    获取配置信息 Get config info
-    :param select: 配置项名称 Config item name
-    :return: 配置项值 Config item value
-    """
-    global g_config_cache, g_config_mtime
-    config_path = Path(DEFAULT_CONFIG_PATH)
-
-    if config_path.exists():
-        current_mtime = config_path.stat().st_mtime
-        if current_mtime != g_config_mtime or g_config_cache is None:
-            with open(config_path, "r", encoding="utf-8") as f:
-                g_config_cache = json.load(f)
-                g_config_mtime = current_mtime
-    else:
-        # 确保目录存在
-        config_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(config_path, "w", encoding="utf-8") as f:
-            json.dump(DEFAULT_CONFIG, f, indent=4)
-        g_config_cache = DEFAULT_CONFIG
-        g_config_mtime = config_path.stat().st_mtime
-
-    if select:
-        return g_config_cache.get(select)
-    return g_config_cache
-
-def set_config(select: str, value: Union[dict, str, bool, int, None]) -> tuple[bool, Optional[str]]:
-    """
-    设置配置信息 Set config info
-    :param select: 配置项名称 Config item name
-    :param value: 配置项值 Config item value
-    :return: (设置是否成功, 消息) (Set success or not, message)
-    """
-    config_path = Path(DEFAULT_CONFIG_PATH)
-
-    if not config_path.exists():
-        with open(config_path, "w", encoding="utf-8") as f:
-            json.dump(DEFAULT_CONFIG, f, indent=4)
-
-    backup_success, backup_info = create_backup(config_path)
-    if not backup_success:
-        return False, f"备份失败: {backup_info}"
-
-    with open(config_path, "r+", encoding="utf-8") as f:
+    if not pathlib.Path(str(get_config_path())).exists():
+        init_config()
+    with open(str(get_config_path()), "r") as f:
         config = json.load(f)
-        config[select] = value
-        f.seek(0)
+    if key is None:
+        return config
+    return config.get(key, None)
+
+def set_config(key: str, value: Any) -> bool:
+    """
+    设置配置
+    Set config
+    Args:
+        key (str): 配置键
+        value (Any): 配置值
+    Returns:
+        bool: 是否成功设置配置
+    """
+    if not pathlib.Path(str(get_config_path())).exists():
+        init_config()
+    with open(str(get_config_path()), "r") as f:
+        config = json.load(f)
+    config[key] = value
+    with open(str(get_config_path()), "w") as f:
         json.dump(config, f, indent=4)
-        f.truncate()
+    return config.get(key, None) == value
 
-    with open(config_path, "r", encoding="utf-8") as f:
-        verify_config = json.load(f)
-        if verify_config.get(select) != value:
-            shutil.move(backup_info, config_path)
-            return False, f"配置项 '{select}' 设置失败，已恢复备份"
-
-    global g_config_cache
-    g_config_cache = None
-    return True, f"配置项 '{select}' 设置成功"
-
-@handle_config_exceptions
-def reset_config() -> tuple[bool, Optional[str]]:
+def backup_config(backup_path: str = None) -> bool:
     """
-    重置配置信息 Reset config info
-    :return: (重置是否成功, 消息) (Reset success or not, message)
+    备份配置
+    Backup config
+    Args:
+        backup_path (str, optional): 备份文件路径. Defaults to None.
+    Returns:
+        bool: 是否成功备份配置
     """
-    config_path = Path(DEFAULT_CONFIG_PATH)
+    if not pathlib.Path(str(get_config_path())).exists():
+        init_config()
+    if backup_path is None:
+        backup_path = str(get_config_path()) + ".backup"
+    with open(str(get_config_path()), "r") as f:
+        config = json.load(f)
+    backup_path = backup_path or str(get_config_path()) + ".backup"
+    with open(str(backup_path), "w") as f:
+        json.dump(config, f, indent=4)
+    return True
 
-    if config_path.exists():
-        backup_success, backup_info = create_backup(config_path)
-        if not backup_success:
-            return False, f"备份失败: {backup_info}"
+def restore_config(backup_path: str = None) -> bool:
+    """
+    恢复配置
+    Restore config
+    Args:
+        backup_path (str, optional): 备份文件路径. Defaults to None.
+    Returns:
+        bool: 是否成功恢复配置
+    """
+    if not pathlib.Path(str(get_config_path())).exists():
+        init_config()
+    if backup_path is None:
+        backup_path = str(get_config_path()) + ".backup"
+    with open(str(backup_path), "r") as f:
+        config = json.load(f)
+    with open(str(get_config_path()), "w") as f:
+        json.dump(config, f, indent=4)
+    return True
 
-    with open(config_path, "w", encoding="utf-8") as f:
-        json.dump(DEFAULT_CONFIG, f, indent=4)
-
-    global g_config_cache
-    g_config_cache = None
-    return True, "配置已重置为默认值"
+def reset_config() -> bool:
+    """
+    重置配置
+    Reset config
+    Returns:
+        bool: 是否成功重置配置
+    """
+    init_config(config=DEFAULT_CONFIG)
+    return True

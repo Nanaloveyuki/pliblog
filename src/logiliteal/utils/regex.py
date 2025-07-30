@@ -3,10 +3,10 @@
 """
 import re
 from collections import deque
-from .styles import set_color, set_bg_color
+from .styles import set_color
 
 
-async def process_links(text: str, no_process: bool = False) -> str:
+def process_links(text: str, no_process: bool = False) -> str:
     """处理链接标签(HTML和Markdown格式)"""
     if no_process:
         return text
@@ -40,7 +40,7 @@ async def process_links(text: str, no_process: bool = False) -> str:
     return text
 
 
-async def process_markdown_formats(text: str, no_process: bool = False) -> str:
+def process_markdown_formats(text: str, no_process: bool = False) -> str:
     """处理Markdown格式"""
     if no_process:
         return text
@@ -55,7 +55,7 @@ async def process_markdown_formats(text: str, no_process: bool = False) -> str:
     return text
 
 
-async def process_html_styles(text: str, no_process: bool = False) -> str:
+def process_html_styles(text: str, no_process: bool = False) -> str:
     """处理HTML样式标签"""
     if no_process:
         return text
@@ -74,7 +74,7 @@ async def process_html_styles(text: str, no_process: bool = False) -> str:
     return text
 
 
-async def process_special_tags(text: str, no_process: bool = False) -> str:
+def process_special_tags(text: str, no_process: bool = False) -> str:
     """处理特殊标签(换行、重置、段落)"""
     if no_process:
         return text
@@ -87,7 +87,7 @@ async def process_special_tags(text: str, no_process: bool = False) -> str:
     return text
 
 
-async def process_color_formatting(text: str, no_process: bool = False) -> str:
+def process_color_formatting(text: str, no_process: bool = False) -> str:
     """处理颜色标签"""
     if no_process:
         return text
