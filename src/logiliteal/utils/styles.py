@@ -8,7 +8,7 @@ py-logiliteal's style tools, used to format log output
 
 from typing import Union, Optional
 
-def _get_hex_to_ansi(hex_color: str|None) -> Union[Optional[str], None]:
+async def _get_hex_to_ansi(hex_color: str | None) -> Union[Optional[str], None]:
     """
     将16进制颜色值转换为ANSI转义序列
     Convert hex color value to ANSI escape sequence
@@ -22,7 +22,7 @@ def _get_hex_to_ansi(hex_color: str|None) -> Union[Optional[str], None]:
     r, g, b = int(hex_color[1:3], 16), int(hex_color[3:5], 16), int(hex_color[5:7], 16)
     return f"\033[38;2;{r};{g};{b}m"
 
-def set_color(text: str|None, color: str|None) -> str:
+async def set_color(text: str | None, color: str | None) -> str:
     """
     设置文本颜色
     Set text color
@@ -34,12 +34,12 @@ def set_color(text: str|None, color: str|None) -> str:
         return ""
     if not color:
         return text
-    ansi = _get_hex_to_ansi(color)
+    ansi = await _get_hex_to_ansi(color)
     if not ansi:
         return text
     return f"{ansi}{text}\033[0m"
 
-def set_bg_color(text: str|None, color: str|None) -> str:
+async def set_bg_color(text: str | None, color: str | None) -> str:
     """
     设置文本背景颜色
     Set text background color
@@ -51,13 +51,20 @@ def set_bg_color(text: str|None, color: str|None) -> str:
         return ""
     if not color:
         return text
-    ansi = _get_hex_to_ansi(color)
+    ansi = await _get_hex_to_ansi(color)
     if not ansi:
         return text
     ansi = ansi.replace("38;", "48;")
     return f"{ansi}{text}\033[0m"
 
-def set_style(text: str|None, bold: bool = False, italic: bool = False, underline: bool = False, strikethrough: bool = False, reverse: bool = False) -> str:
+async def set_style(
+    text: str | None,
+    bold: bool = False,
+    italic: bool = False,
+    underline: bool = False,
+    strikethrough: bool = False,
+    reverse: bool = False
+) -> str:
     """
     设置文本样式
     Set text style
